@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mistletoe Catch Game</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Sacramento&display=swap');
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Roboto', sans-serif;
+      margin: 0;
+      background-color: #f4f4f4;
+      color: #333;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 30px 10px;
+    }
+
+    .game-wrapper {
+      max-width: 480px;
+      width: 100%;
+      background-color: #ffffff;
+      box-shadow: 0 0 10px rgba(0,0,0,0.08);
+      border-radius: 8px;
+      padding: 20px;
+      text-align: center;
+    }
+
+    .game-title {
+      font-family: 'Sacramento', cursive;
+      font-size: 40px;
+      color: #d32f2f;
+      margin: 0 0 10px;
+      text-decoration: underline;
+    }
+
+    .game-subtitle {
+      font-size: 16px;
+      margin-bottom: 15px;
+      color: #555;
+    }
+
+    #gameCanvas {
+      background: #0b3d0b; /* dark green */
+      border: 4px solid #d32f2f;
+      border-radius: 6px;
+      display: block;
+      margin: 0 auto 10px;
+    }
+
+    .game-info {
+      display: flex;
+      justify-content: space-between;
+      font-size: 16px;
+      margin-bottom: 10px;
+    }
+
+    .controls {
+      font-size: 14px;
+      color: #555;
+      margin-bottom: 10px;
+    }
+
+    .cta-box {
+      background-color: #fff5f5;
+      border-radius: 6px;
+      padding: 12px;
+      margin-top: 10px;
+      border: 1px solid #ffd6d6;
+    }
+
+    .cta-box strong {
+      color: #d32f2f;
+    }
+
+    .cta-button {
+      display: inline-block;
+      margin-top: 8px;
+      padding: 8px 18px;
+      border-radius: 20px;
+      border: none;
+      background-color: #388e3c;
+      color: #fff;
+      font-weight: 700;
+      cursor: pointer;
+      text-decoration: none;
+      font-size: 14px;
+    }
+
+    .cta-button:hover {
+      background-color: #2e7030;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="game-wrapper">
+    <h1 class="game-title">Mistletoe Catch</h1>
+    <p class="game-subtitle">Use the arrow keys (or tap left/right) to catch as many mistletoe bundles as you can!</p>
+
+    <div class="game-info">
+      <div>Score: <span id="score">0</span></div>
+      <div>Missed: <span id="missed">0</span> / 5</div>
+    </div>
+
+    <canvas id="gameCanvas" width="360" height="480"></canvas>
+
+    <p class="controls">
+      💻 Use <strong>←</strong> and <strong>→</strong> keys &nbsp;|&nbsp; 📱 On phones, tap left or right side of the game.
+    </p>
+
+    <div class="cta-box">
+      <p><strong>Love catching mistletoe?</strong><br>
+      Bring the magic home with real, fresh bundles from Midway Mistletoe Co.</p>
+      <!-- Change href to your actual “Where to Buy” or contact section -->
+      <a href="#buy" class="cta-button">Shop Fresh Mistletoe</a>
+    </div>
+  </div>
+
+  <script>
+    const canvas = document.getElementById('gameCanvas');
+    const ctx = canvas.getContext('2d');
+
+    const scoreEl = document.getElementById('score');
+    const missedEl = document.getElementById('missed');
+
+    const width = canvas.width;
+    const height = canvas.height;
+
+    // Player basket
+    const player = {
+      x: width / 2 - 30,
+      y: height - 40,
+      width: 60,
+      height: 15,
+      speed: 6,
+      dx: 0
+    };
+
+    // Falling mistletoe bundles
+    const mistletoes = [];
+    let lastSpawn = 0;
+    const spawnInterval = 900; // ms
+    let score = 0;
+    let missed = 0;
+    let gameOver = false;
+
+    function drawPlayer() {
+      ctx.fillStyle = '#ffe082'; // basket color
+      ctx.fillRect(player.x, player.y, player.width, player.height);
+
+      // Ribbon on basket
+      ctx.fillStyle = '#d32f2f';
+      ctx.fillRect(player.x + player.width / 4, player.y + 3, player.width / 2, 4);
+    }
+
+    function spawnMistletoe(timestamp) {
+      if (timestamp - lastSpawn > spawnInterval) {
+        lastSpawn = timestamp;
+        const size = 18 + Math.random() * 10;
+        const x = Math.random() * (width - size);
+        mistletoes.push({
+          x,
+          y: -size,
+          size,
+          speed: 2 + Math.random() * 2
+        });
+      }
+    }
+
+    function drawMistletoe(m) {
+      // Simple mistletoe icon: green ball + red bow
+      ctx.beginPath();
+      ctx.fillStyle = '#4caf50';
+      ctx.arc(m.x + m.size / 2, m.y + m.size / 2, m.size / 2, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.fillStyle = '#d32f2f';
+      ctx.fillRect(m.x + m.size / 4, m.y - 4, m.size / 2, 4);
+    }
+
+    function updateMistletoes() {
+      for (let i = mistletoes.length - 1; i >= 0; i--) {
+        const m = mistletoes[i];
+        m.y += m.speed;
+
+        // Check for catch
+        if (
+          m.y + m.size >= player.y &&
+          m.x + m.size > player.x &&
+          m.x < player.x + player.width
+        ) {
+          // Caught
+          score++;
+          scoreEl.textContent = score;
+          mistletoes.splice(i, 1);
+          continue;
+        }
+
+        // Check if missed (falls off bottom)
+        if (m.y > height) {
+          missed++;
+          missedEl.textContent = missed;
+          mistletoes.splice(i, 1);
+        }
+      }
+    }
+
+    function drawMistletoes() {
+      mistletoes.forEach(drawMistletoe);
+    }
+
+    function movePlayer() {
+      player.x += player.dx;
+
+      // Keep inside canvas
+      if (player.x < 0) player.x = 0;
+      if (player.x + player.width > width) player.x = width - player.width;
+    }
+
+    function clear() {
+      ctx.clearRect(0, 0, width, height);
+    }
+
+    function drawBackground() {
+      // Subtle sparkle effect background
+      ctx.fillStyle = '#0b3d0b';
+      ctx.fillRect(0, 0, width, height);
+
+      // Snow dots
+      ctx.fillStyle = 'rgba(255,255,255,0.25)';
+      for (let i = 0; i < 20; i++) {
+        const sx = (i * 19 + (Date.now() / 30)) % width;
+        const sy = (i * 37 + (Date.now() / 40)) % height;
+        ctx.beginPath();
+        ctx.arc(sx, sy, 2, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+
+    function drawGameOver() {
+      ctx.fillStyle = 'rgba(0,0,0,0.6)';
+      ctx.fillRect(0, 0, width, height);
+
+      ctx.fillStyle = '#ffffff';
+      ctx.textAlign = 'center';
+      ctx.font = '28px Roboto';
+      ctx.fillText('Game Over!', width / 2, height / 2 - 20);
+      ctx.font = '18px Roboto';
+      ctx.fillText('You caught ' + score + ' mistletoe bundles!', width / 2, height / 2 + 10);
+      ctx.fillText('Refresh the page to play again.', width / 2, height / 2 + 40);
+    }
+
+    function update(timestamp) {
+      if (gameOver) {
+        drawGameOver();
+        return;
+      }
+
+      clear();
+      drawBackground();
+      spawnMistletoe(timestamp || 0);
+      updateMistletoes();
+      movePlayer();
+      drawMistletoes();
+      drawPlayer();
+
+      if (missed >= 5) {
+        gameOver = true;
+        drawGameOver();
+        return;
+      }
+
+      requestAnimationFrame(update);
+    }
+
+    // Keyboard controls
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowLeft') {
+        player.dx = -player.speed;
+      } else if (e.key === 'ArrowRight') {
+        player.dx = player.speed;
+      }
+    });
+
+    document.addEventListener('keyup', (e) => {
+      if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
+        player.dx = 0;
+      }
+    });
+
+    // Simple touch controls for mobile
+    canvas.addEventListener('touchstart', handleTouch);
+    canvas.addEventListener('touchmove', handleTouch);
+    canvas.addEventListener('touchend', () => {
+      player.dx = 0;
+    });
+
+    function handleTouch(e) {
+      const rect = canvas.getBoundingClientRect();
+      const touchX = e.touches[0].clientX - rect.left;
+
+      if (touchX < width / 2) {
+        player.dx = -player.speed;
+      } else {
+        player.dx = player.speed;
+      }
+      e.preventDefault();
+    }
+
+    // Start the loop
+    requestAnimationFrame(update);
+  </script>
+</body>
+</html>

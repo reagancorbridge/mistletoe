@@ -1,0 +1,56 @@
+body{
+    background-color: green;
+    color:rgb(211, 67, 67);
+    font-family: Arial, Helvetica, sans-serif;   
+}
+
+h1{
+    text-align: center;
+}
+
+h2{
+    color: green;
+    text-decoration: underline;
+    text-align: center;
+}
+h3{
+    color:green;
+    font-family: 'Courier New', Courier, monospace;
+}
+
+.common{
+    background-color: aliceblue;
+    border: 2px solid white;
+    position: absolute 
+}
+
+.left{
+    top:115px;
+    left: 15px;
+    width: 100px;
+    bottom: 40px; 
+}
+
+.main{
+    top:115px;
+    left: 15px;
+    width: 100px;
+    bottom: 40px; 
+}
+
+.right{
+    top:115px;
+    left: 25px;
+    width: 100px;
+    height: 100px 
+}
+
+.footer{
+    bottom: 40px; 
+    height: 25px;
+    left: 15px;
+    right: 25;
+    position: fixed;
+    background-color: lightblue;
+    border: 2px solid pink;
+}

@@ -1,0 +1,148 @@
+<!-- comment here
+ Reagan Corbridge 
+ IS 201
+ 12/5/25
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Mistletoe</title>
+    <link rel="stylesheet" href="scratch.css">
+    <style>
+        /* TEMP inline styling just so video + tableau display correctly.
+           You can move these to scratch.css later. */
+
+        img {
+            display: block;
+            margin: 20px auto;
+        }
+
+        .video-container {
+            position: relative;
+            width: 80%;
+            max-width: 700px;
+            margin: 30px auto;
+            padding-bottom: 56.25%; /* 16:9 ratio */
+            height: 0;
+        }
+
+        .video-container iframe {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            left: 0;
+            top: 0;
+            border: none;
+        }
+
+        .tableau-container {
+            max-width: 800px;
+            margin: 40px auto;
+        }
+
+        h1, h2 {
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+     <a href="index.html" id="top">Home</a> |
+     <a href="#">Mistletoe Page</a><br><br>
+
+     <a href="#mistle">Mistletoe</a><br>
+     <a href="#orgn-history">Origins and History</a><br>
+     <a href="#holiday-traditions">Holiday Tradition</a><br><br>
+
+    <h1 id="mistle">Mistletoe</h1>
+
+    <p>
+        Mistletoe is a parasitic plant traditionally associated with winter holidays,
+        especially Christmas. Known for its green leaves and white berries, mistletoe
+        grows on the branches of trees and absorbs water and nutrients from its host.
+    </p>
+
+    <img src="fresh_mistletoe_hanging_on_tree.webp" height="150" alt="fresh mistletoe">
+
+    <h2 id="orgn-history">Origins and History</h2>
+    <p>
+        The use of mistletoe in celebrations dates back to ancient Celtic and Norse cultures.
+        Druids viewed it as a sacred symbol of life and protection, while Norse mythology
+        linked it to legends of love and peace.
+    </p>
+
+    <h2 id="holiday-traditions">Holiday Tradition</h2>
+    <p>
+        One of the most well-known traditions involving mistletoe is the custom of
+        kissing underneath it. This practice became popular in 18th-century England
+        and spread to other countries.
+    </p>
+
+    <img src="https://tse3.mm.bing.net/th/id/OIP.jeuGq8YkavX2aC5xZPWDAgHaFV?pid=Api&P=0&h=180"
+         alt="bundled mistletoe">
+
+    <h2>Where Mistletoe Grows</h2>
+    <p>
+        Mistletoe can be found in many parts of the world, including Europe, North America,
+        and Australia. It typically grows high in the branches of trees such as oaks,
+        apple trees, and maples.
+    </p>
+
+    <h2>Interesting Facts</h2>
+    <ul>
+        <li>Mistletoe berries are poisonous to humans but eaten by birds.</li>
+        <li>The plant is considered a symbol of fertility and renewal.</li>
+        <li>It remains green even in winter.</li>
+        <li>There are over 1,000 species of mistletoe worldwide.</li>
+    </ul>
+
+    <!-- ⭐ YouTube Embed -->
+    <h2>Learn More About Mistletoe</h2>
+    <div class="video-container">
+        <iframe 
+            src="https://www.youtube.com/embed/Fm590UflAbw"
+            title="Mistletoe video"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen>
+        </iframe>
+    </div>
+
+    <!-- ⭐ Tableau Embed -->
+    <h2>Mistletoe Tableau Visualization</h2>
+    <div class="tableau-container">
+        <div class='tableauPlaceholder' id='vizMist' style='position: relative'>
+            <noscript>
+                <a href='#'>
+                    <img alt='Tableau Chart' 
+                    src='https://public.tableau.com/static/images/ZZ/ZZFT9N36F/1.png' 
+                    style='border:none;'/>
+                </a>
+            </noscript>
+
+            <object class='tableauViz'>
+                <param name='host_url' value='https%3A%2F%2Fpublic.tableau.com%2F' />
+                <param name='embed_code_version' value='3' />
+                <param name='path' value='shared/ZZFT9N36F' />
+                <param name='toolbar' value='yes' />
+                <param name='static_image' value='https://public.tableau.com/static/images/ZZ/ZZFT9N36F/1.png' />
+                <param name='display_static_image' value='yes' />
+            </object>
+        </div>
+    </div>
+
+    <script type='text/javascript'>
+        var divElement = document.getElementById('vizMist');
+        var vizElement = divElement.getElementsByTagName('object')[0];
+        vizElement.style.width = '100%';
+        vizElement.style.height = '600px';
+
+        var scriptElement = document.createElement('script');
+        scriptElement.src = 'https://public.tableau.com/javascripts/api/viz_v1.js';
+        vizElement.parentNode.insertBefore(scriptElement, vizElement);
+    </script>
+
+    <p><a href="#top">Back to Top</a></p>
+
+</body>
+</html>
